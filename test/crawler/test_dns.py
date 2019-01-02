@@ -27,4 +27,4 @@ class TestDNS(TestCase):
 
         interval = time.time() - stime
 
-        self.assertGreater(interval, 0.5)
+        self.assertGreater(interval, 0.1)

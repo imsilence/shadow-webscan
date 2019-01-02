@@ -47,7 +47,7 @@ class Curl(object):
         return self.__make_response(response, url)
 
     def __make_response(self, response, url):
-        if response:
+        if response is not None:
             return Response(response.status_code, response.reason,
                             response.headers, response.text,
                             request_url=url, charset=response.encoding)

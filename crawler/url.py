@@ -22,11 +22,8 @@ class URL(object):
         'https' : 443,
     }
 
-    DEFAULT_ENCODING = 'utf-8'
-
-    def __init__(self, url, encoding=DEFAULT_ENCODING):
+    def __init__(self, url):
         self.__url = url
-        self.__encoding = encoding
         self.__scheme = 'http'
         self.__username = ''
         self.__password = ''
@@ -120,3 +117,13 @@ class URL(object):
     @parse
     def __repr__(self):
         return '<{0!r}>{1!r}'.format(self.__class__.__name__, vars(self))
+
+    @parse
+    def __eq__(self, other):
+        return self.__scheme == other.__scheme and \
+                self.__netloc == other.__netloc and \
+                self.__path == other.__path
+
+    @parse
+    def __hash__(self):
+        return hash(self.__scheme) ^ hash(self.__netloc) ^ hash(self.__path)

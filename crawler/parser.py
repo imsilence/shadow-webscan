@@ -57,16 +57,13 @@ class HTMLParser(object):
 
     def __xml_parse(self):
         parser = etree.HTMLParser(target=self)
-        etree.fromstring(response.body, parser)
+        etree.fromstring(self.__response.body, parser)
 
     def start(self, tag, attrs):
         tag = tag.lower()
 
         callback = getattr(self, '_handle_{0}_tag_start'.format(tag), self.NIL)
         callback(attrs)
-        if tag == 'form':
-            print(callback)
-            print('__handle_{0}_tag_start'.format(tag))
 
         if tag in self.URL_TAGS:
             self.__find_tag_urls(attrs)
@@ -142,14 +139,3 @@ class HTMLParser(object):
     @property
     def requests(self):
         return self.__requests
-
-
-if __name__ == '__main__':
-    from curl import Curl
-    curl = Curl()
-    response = curl.get('www.baidu.com')
-
-    parser = HTMLParser(response)
-    parser.parse()
-    print(parser.requests)
-
