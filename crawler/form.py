@@ -32,7 +32,7 @@ class Form(object):
             return value
 
         name = name.lower()
-        if name in ['user', 'username', 'name', 'nickname']:
+        if name in ['user', 'username', 'uname', 'name', 'nickname']:
             return 'webscan'
         elif name in ['password', 'pwd', 'pass', 'passwd']:
             return 'abc1234.C'
@@ -41,7 +41,7 @@ class Form(object):
         elif name in ['tel', 'telphone', 'phone']:
             return '15200000000'
         elif name in ['context', 'text', 'query', 'search',
-            'data', 'comment', 'q']:
+            'data', 'comment', 'q', 'searchfor']:
             return 'test'
         elif name in ['domain', 'website']:
             return 'www.test.com'

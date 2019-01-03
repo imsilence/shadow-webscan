@@ -3,17 +3,18 @@
 import logging
 import urllib3
 
-from crawler import Crawler
+from crawler import Crawler, DNS
 
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     urllib3.disable_warnings()
+    DNS.open_cache()
 
     crawler = Crawler()
-    crawler.crawl('http://zhidao.baidu.com/uteam?fr=daohang')
+    crawler.crawl('http://testphp.vulnweb.com/')
 
     print('-' * 20)
     f = open('urls.txt', 'wt', encoding='utf-8')

@@ -108,11 +108,14 @@ class HTMLParser(object):
     def __make_url(self, url):
         if not url or url.startswith('javascript:'):
             return None
-
-        if url.startswith('http'):
-            return URL(url)
-        else:
-            return URL(urljoin(self.__base_url, url))
+        try:
+            if url.startswith('http'):
+                return URL(url)
+            else:
+                return URL(urljoin(self.__base_url, url))
+        except Exception as e:
+            logger.error('make url error: %s', url)
+            logger.error(traceback.format_exc())
 
     def _handle_form_tag_start(self, attrs):
         self.__in_form = True
