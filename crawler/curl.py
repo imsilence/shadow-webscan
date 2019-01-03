@@ -73,8 +73,6 @@ class Curl(object):
         stime = time.time()
         ccount = 0
         timeout = 0.01
-        speed = 1
-        interval = 5
 
         def wrapper(object_, *args, **kwargs):
             nonlocal stime, ccount

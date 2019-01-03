@@ -13,8 +13,11 @@ if __name__ == '__main__':
     urllib3.disable_warnings()
 
     crawler = Crawler()
-    crawler.crawl('www.baidu.com')
+    crawler.crawl('http://zhidao.baidu.com/uteam?fr=daohang')
 
     print('-' * 20)
+    f = open('urls.txt', 'wt', encoding='utf-8')
     for url in crawler.urls:
         print(url.url)
+        f.write(url.url)
+        f.write('\n')

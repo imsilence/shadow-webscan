@@ -139,7 +139,7 @@ class HTMLParser(object):
 
     def _handle_input_tag_start(self, attrs):
         side = 'inside' if self.__in_form else 'outside'
-        callback = getattr(self, '_handle_input_tag_inside', self.NIL)
+        callback = getattr(self, '_handle_input_tag_{0}'.format(side), self.NIL)
         callback(attrs)
 
     def _handle_input_tag_inside(self, attrs):

@@ -22,7 +22,7 @@ class Crawler(object):
 
     DEFAULT_DEPTH_LIMIT = 3
     DEFAULT_TIME_LIMIT = 30
-    DEFAULT_REQ_LIMIT = 10
+    DEFAULT_REQ_LIMIT = 1
 
     def __init__(self, depth_limit=DEFAULT_DEPTH_LIMIT,
         time_limit=DEFAULT_TIME_LIMIT, req_limit=DEFAULT_REQ_LIMIT):

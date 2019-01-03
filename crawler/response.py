@@ -4,12 +4,10 @@ import uuid
 
 class Response(object):
 
-    DEFAULT_TIME = 0.2
     DEFAULT_STATUS_MSG = 'OK'
 
     def __init__(self, status_code=None, status_msg=DEFAULT_STATUS_MSG,
-        headers=None, body='', request_url=None, uid=None,time=DEFAULT_TIME,
-        charset=None):
+        headers=None, body='', request_url=None, uid=None, charset=None):
 
         self.__status_code = status_code
         self.__status_msg = status_msg
@@ -17,7 +15,6 @@ class Response(object):
         self.__body = body
         self.__request_url = request_url
         self.__uid = uid if uid else str(uuid.uuid1())
-        self.__time = time
         self.__charset = charset
 
     @property
