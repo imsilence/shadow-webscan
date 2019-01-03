@@ -16,7 +16,7 @@ class Page404(object):
 
     def __generate_features(self, url):
         rand_file = '{0}.html'.format(''.join(sample(ascii_letters, 8)))
-        url_404 = urljoin('{0}://{1}'.format(url.scheme, url.netloc), rand_file)
+        url_404 = urljoin(url.site, rand_file)
         curl = Curl()
         response_200 = curl.get(url.hostname)
         response_404 = curl.get(url_404)

@@ -85,6 +85,11 @@ class URL(object):
 
     @property
     @parse
+    def site(self):
+        return '{0}://{1}'.format(self.__scheme, self.__netloc)
+
+    @property
+    @parse
     def path(self):
         return self.__path
 

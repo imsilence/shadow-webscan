@@ -17,7 +17,7 @@ class Curl(object):
     DEFAULT_HEADERS ={'User-Agent': DEFAULT_USER_AGENT}
     DEFAULT_INTERVAL = 5
     DEFAULT_SPEED = 1
-    DEFAULT_TIMEOUT = 2
+    DEFAULT_TIMEOUT = 3
 
     NIL = lambda *args, **kwargs: None
 
