@@ -1,26 +1,33 @@
 #encoding: utf-8
 
+import logging
 import requests
 import socket
 import time
+import traceback
 
 from .config import DEFAULT_USER_AGENT
 from .url import URL
 from .response import Response
+
+logger = logging.getLogger(__name__)
 
 class Curl(object):
 
     DEFAULT_HEADERS ={'User-Agent': DEFAULT_USER_AGENT}
     DEFAULT_INTERVAL = 5
     DEFAULT_SPEED = 1
+    DEFAULT_TIMEOUT = 2
 
     NIL = lambda *args, **kwargs: None
 
     def __init__(self, headers=DEFAULT_HEADERS, cookies=None,
-                    interval=DEFAULT_INTERVAL, speed=DEFAULT_SPEED):
+        interval=DEFAULT_INTERVAL, speed=DEFAULT_SPEED,
+        timeout=DEFAULT_TIMEOUT):
 
         self.__headers = headers.copy()
         self.__cookies = cookies.copy() if cookies else {}
+        self.__timeout = timeout
         self.__hook(interval, speed)
 
     def get(self, url, headers=None, **kwargs):
@@ -43,14 +50,21 @@ class Curl(object):
             url = URL(url)
 
         callback = getattr(requests, method.lower(), self.NIL)
-        response = callback(url.url, data=data, headers=headers, **kwargs)
+        response = None
+        try:
+            response = callback(url.url, data=data, headers=headers,
+                                    timeout=self.__timeout, **kwargs)
+        except Exception as e:
+            logger.error('error request url: %s', url.url)
+            logger.error(traceback.format_exc())
+
         return self.__make_response(response, url)
 
     def __make_response(self, response, url):
         if response is not None:
             return Response(response.status_code, response.reason,
-                            response.headers, response.text,
-                            request_url=url, charset=response.encoding)
+                        response.headers, response.text,
+                        request_url=url, charset=response.encoding)
         else:
             return Response(request_url=url)
 

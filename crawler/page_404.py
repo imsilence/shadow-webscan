@@ -14,14 +14,14 @@ class Page404(object):
         self.__404_features = {}
         self.__404_code_list = [200, 301, 302]
 
-    def generate_features(self, url):
+    def __generate_features(self, url):
         rand_file = '{0}.html'.format(''.join(sample(ascii_letters, 8)))
-        url_404 = urljoin(url.hostname, rand_file)
+        url_404 = urljoin('{0}://{1}'.format(url.scheme, url.netloc), rand_file)
         curl = Curl()
         response_200 = curl.get(url.hostname)
         response_404 = curl.get(url_404)
 
-        if not self.is_similar(response_200.body, response_404.body):
+        if not self.__is_similar(response_200.body, response_404.body):
             self.__404_features[url.hostname] = response_404
 
     def is_404(self, response):
@@ -33,10 +33,10 @@ class Page404(object):
                 feature = self.__404_features.get(response.request_url.hostname)
 
                 if feature is None:
-                    self.generate_features(response.request_url)
-                elif self.is_similar(feature.body, response.body):
+                    self.__generate_features(response.request_url)
+                elif self.__is_similar(feature.body, response.body):
                     return True
         return False
 
-    def is_similar(self, body01, body02):
-        return Simhash(response_200.body).distance(response_404.body) <= 3
+    def __is_similar(self, body01, body02):
+        return Simhash(body01).distance(Simhash(body02)) <= 3

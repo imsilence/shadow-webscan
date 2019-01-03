@@ -1,6 +1,9 @@
 #encoding: utf-8
 
+import logging
 import socket
+
+logger = logging.getLogger(__name__)
 
 class DNS(object):
     __cached = {}

@@ -1,18 +1,8 @@
 #encoding: utf-8
-from functools import wraps
 
 from urllib.parse import urlparse, parse_qs
 
-def parse(method):
-
-    @wraps(method)
-    def wrapper(object_, *args, **kwargs):
-        if not object_.parsed:
-            object_.parse_url()
-
-        return method(object_, *args, **kwargs)
-
-    return wrapper
+from utils.decorators import parse
 
 
 class URL(object):
@@ -36,7 +26,7 @@ class URL(object):
         self.__fragment = ''
         self.__parsed = False
 
-    def parse_url(self):
+    def __call__(self):
         if self.__parsed:
             return
 
@@ -90,6 +80,11 @@ class URL(object):
 
     @property
     @parse
+    def netloc(self):
+        return self.__netloc
+
+    @property
+    @parse
     def path(self):
         return self.__path
 
@@ -101,7 +96,7 @@ class URL(object):
     @property
     @parse
     def fileext(self):
-        pos = self.file.name.rfind('.')
+        pos = self.filename.rfind('.')
         return self.filename[pos+1:] if pos > 0 else ''
 
     @property

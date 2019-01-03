@@ -8,8 +8,7 @@ class Request(object):
     DEFAULT_METHOD = 'GET'
 
     def __init__(self, url, method=DEFAULT_METHOD, headers=None, cookies=None,
-                    referer=None, data=None, user_agent=DEFAULT_USER_AGENT,
-                    **kwargs):
+        referer=None, data=None, user_agent=DEFAULT_USER_AGENT, **kwargs):
 
         if not isinstance(url, URL):
             url = URL(url)
@@ -66,3 +65,14 @@ class Request(object):
 
     def __repr__(self):
         return '<{0}>{1}'.format(self.__class__.__name__, vars(self))
+
+    def __eq__(self, other):
+        return self.__url == other.__url and \
+                self.__query_string == other.__query_string and \
+                self.__data == other.__data
+
+    def __hash__(self):
+        data = self.__data
+        if isinstance(data, list):
+            data = tuple(sorted(name for name, value in data))
+        return hash(self.__url) ^ hash(self.__query_string) ^ hash(data)

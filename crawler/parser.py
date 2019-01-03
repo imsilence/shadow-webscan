@@ -1,13 +1,21 @@
 #encoding: utf-8
 
+import logging
+import traceback
 import re
 from urllib.parse import urljoin, urlencode
 
 from lxml import etree
 
+from utils.decorators import parse
+
 from .url import URL
 from .form import Form
 from .request import Request
+
+
+logger = logging.getLogger(__name__)
+
 
 class HTMLParser(object):
 
@@ -33,11 +41,19 @@ class HTMLParser(object):
         self.__forms = []
         self.__in_form = False
         self.__requests = []
+        self.__parsed = False
 
-    def parse(self):
-        self.__header_parse()
-        self.__regex_parse()
-        self.__xml_parse()
+    def __call__(self):
+        if self.__parsed:
+            return
+        self.__parsed = True
+        try:
+            self.__header_parse()
+            self.__regex_parse()
+            self.__xml_parse()
+        except Exception as e:
+            logger.error('error parse response: %s', self.__base_url)
+            logger.error(traceback.format_exc())
 
     def __header_parse(self):
         for name in self.URL_HEADERS:
@@ -105,6 +121,7 @@ class HTMLParser(object):
         action = attrs.get('action', self.__base_url)
         if action and not action.startswith('http'):
             action = urljoin(self.__base_url, action)
+
         form = Form(name, action, method)
         self.__forms.append(form)
 
@@ -133,9 +150,15 @@ class HTMLParser(object):
         form.push_data(name, value, type_)
 
     @property
+    def parsed(self):
+        return self.__parsed
+
+    @property
+    @parse
     def urls(self):
         return self.__urls_header | self.__urls_tag | self.__urls_re
 
     @property
+    @parse
     def requests(self):
         return self.__requests

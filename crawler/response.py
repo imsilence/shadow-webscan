@@ -8,10 +8,9 @@ class Response(object):
     DEFAULT_STATUS_MSG = 'OK'
 
     def __init__(self, status_code=None, status_msg=DEFAULT_STATUS_MSG,
-                    headers=None, body=None, request_url=None, uid=None,
-                    time=DEFAULT_TIME, charset=None):
+        headers=None, body='', request_url=None, uid=None,time=DEFAULT_TIME,
+        charset=None):
 
-        print(status_code)
         self.__status_code = status_code
         self.__status_msg = status_msg
         self.__headers = headers

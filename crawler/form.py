@@ -1,5 +1,9 @@
 #encoding: utf-8
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class Form(object):
 
     def __init__(self, name, action, method):
@@ -37,7 +41,7 @@ class Form(object):
         elif name in ['tel', 'telphone', 'phone']:
             return '15200000000'
         elif name in ['context', 'text', 'query', 'search',
-                'data', 'comment', 'q']:
+            'data', 'comment', 'q']:
             return 'test'
         elif name in ['domain', 'website']:
             return 'www.test.com'
@@ -48,4 +52,5 @@ class Form(object):
         elif name in ['age']:
             return 28
 
+        logger.info('fill value error, not found: %s', name)
         return 'unkonw'

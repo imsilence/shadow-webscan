@@ -1,13 +1,20 @@
 #encoding: utf-8
-from crawler.curl import Curl
-from crawler.parser import HTMLParser
+
+import logging
+import urllib3
+
+from crawler import Crawler
+
+logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
 
-    curl = Curl()
-    response = curl.get('www.baixxxdu.com')
+    urllib3.disable_warnings()
 
-    parser = HTMLParser(response)
-    parser.parse()
-    print(len(parser.urls))
+    crawler = Crawler()
+    crawler.crawl('www.baidu.com')
 
+    print('-' * 20)
+    for url in crawler.urls:
+        print(url.url)
