@@ -30,17 +30,17 @@ class Curl(object):
         self.__timeout = timeout
         self.__hook(interval, speed)
 
-    def get(self, url, headers=None, **kwargs):
-        return self.__send(url, 'GET', headers=headers, **kwargs)
+    def get(self, url, params=None, headers=None, **kwargs):
+        return self.__send(url, 'GET', params=params, headers=headers, **kwargs)
 
-    def post(self, url, data, headers=None, **kwargs):
-        return self.__send(url, 'POST', data, headers=headers, **kwargs)
+    def post(self, url, data=None, headers=None, **kwargs):
+        return self.__send(url, 'POST', data=data, headers=headers, **kwargs)
 
     def request(self, request, **kwargs):
-        return self.__send(request.url, request.method, request.data,
-                    request.headers, **kwargs)
+        return self.__send(request.url, request.method, params=request.params,
+                    data=request.data, headers=request.headers, **kwargs)
 
-    def __send(self, url, method='GET', data=None, headers=None, **kwargs):
+    def __send(self, url, method='GET', params=None, data=None, headers=None, **kwargs):
         if headers:
             headers.update(self.__headers)
         else:
@@ -52,8 +52,9 @@ class Curl(object):
         callback = getattr(requests, method.lower(), self.NIL)
         response = None
         try:
-            response = callback(url.url, data=data, headers=headers,
-                                    timeout=self.__timeout, **kwargs)
+            response = callback(url.url, params=params, data=data,
+                                headers=headers, timeout=self.__timeout,
+                                **kwargs)
         except Exception as e:
             logger.error('error request url: %s', url.url)
             logger.error(traceback.format_exc())

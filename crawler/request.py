@@ -1,5 +1,7 @@
 #encoding: utf-8
 
+from urllib.parse import parse_qs
+
 from .config import DEFAULT_USER_AGENT
 from .url import URL
 
@@ -58,6 +60,10 @@ class Request(object):
     @property
     def query_string(self):
         return self.__query_string
+
+    @property
+    def params(self):
+        return parse_qs(self.__query_string)
 
     @property
     def data(self):

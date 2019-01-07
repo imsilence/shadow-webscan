@@ -1,9 +1,13 @@
 #encoding: utf-8
 
+import logging
+import traceback
+
 from urllib.parse import urlparse, parse_qs
 
 from utils.decorators import parse
 
+logger = logging.getLogger(__name__)
 
 class URL(object):
 
@@ -13,7 +17,8 @@ class URL(object):
     }
 
     def __init__(self, url):
-        self.__url = url
+        self.__raw_url = url
+        self.__url = ''
         self.__scheme = 'http'
         self.__username = ''
         self.__password = ''
@@ -31,12 +36,17 @@ class URL(object):
             return
 
         self.__parsed = True
-        url = self.__url
+        url = self.__raw_url
         if not url.startswith('http') and not url.startswith('https'):
             url = '{0}://{1}'.format(self.__scheme, url)
-            self.__url = url
+            self.__raw_url = url
 
-        result = urlparse(url)
+        try:
+            result = urlparse(url)
+        except Exception as e:
+            logger.error('parse url error: %s', url)
+            raise e
+
         self.__scheme = result.scheme
         self.__username = result.username
         self.__password = result.password
@@ -53,10 +63,16 @@ class URL(object):
         self.__parameters = result.params
         self.__query_string = result.query
         self.__fragment = result.fragment
+        self.__url = '{0}://{1}{2}'.format(self.__scheme, self.__netloc, self.__path)
 
     @property
     def parsed(self):
         return self.__parsed
+
+    @property
+    @parse
+    def raw_url(self):
+        return self.__raw_url
 
     @property
     @parse

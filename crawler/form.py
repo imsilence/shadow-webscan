@@ -41,7 +41,7 @@ class Form(object):
         elif name in ['tel', 'telphone', 'phone']:
             return '15200000000'
         elif name in ['context', 'text', 'query', 'search',
-            'data', 'comment', 'q', 'searchfor']:
+            'data', 'comment', 'q', 'searchfor', 'word']:
             return 'test'
         elif name in ['domain', 'website']:
             return 'www.test.com'

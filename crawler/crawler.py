@@ -22,7 +22,7 @@ class Crawler(object):
 
     DEFAULT_DEPTH_LIMIT = 3
     DEFAULT_TIME_LIMIT = 30
-    DEFAULT_REQ_LIMIT = 100
+    DEFAULT_REQ_LIMIT = 10
 
     def __init__(self, depth_limit=DEFAULT_DEPTH_LIMIT,
         time_limit=DEFAULT_TIME_LIMIT, req_limit=DEFAULT_REQ_LIMIT):
@@ -82,15 +82,15 @@ class Crawler(object):
             depth = request_event.depth
 
             if req.url.fileext in white_list:
-                logger.debug('skip, ext is white: %s', req.url.url)
+                logger.debug('skip, ext is white: %s', req.url.raw_url)
                 continue
 
             if depth > depth_limit:
-                logger.debug('skip, depth on over: %s', req.url.url)
+                logger.debug('skip, depth on over: %s', req.url.raw_url)
                 continue
 
             if req in requests:
-                logger.debug('skip, request already: %s', req.url.url)
+                logger.debug('skip, request already: %s', req.url.raw_url)
                 continue
 
             response = curl_request(req)
