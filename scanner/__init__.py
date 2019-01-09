@@ -2,3 +2,4 @@
 
 from .sql import SQL
 from .xss import XSS
+from .cmd import CMD

@@ -3,6 +3,7 @@
 import logging
 import random
 import copy
+import re
 
 from simhash import Simhash
 
@@ -15,10 +16,10 @@ from .serverity import Serverity
 
 logger = logging.getLogger(__name__)
 
-class XSS(CommonVulnerability):
+class CMD(CommonVulnerability):
 
-    NAME = '跨站脚本攻击'
-    RANK = Serverity.MEDIUM
+    NAME = '命令注入'
+    RANK = Serverity.HIGH
 
     NIL = lambda *args, **kwargs: None
 
@@ -46,12 +47,12 @@ class XSS(CommonVulnerability):
 
         playloads = self.__get_playloads(params)
         rt_list = []
-        for name, poc in playloads:
+        for name, poc, pattern in playloads:
             if name in white_params:
                 continue
             response = callback(request.url, **{key : params})
 
-            if not response.body or response.body.find(xss_key) == -1:
+            if not response.body or re.search(pattern, response.body) is None:
                 continue
 
             vul = Vulnerability(self.NAME, self.RANK, request.url.url,
@@ -64,10 +65,36 @@ class XSS(CommonVulnerability):
     def __get_playloads(self, params):
         xss_key = self.__xss_key
         playloads = []
+
+        cmds = self.__get_cmds()
+
         for name, value in params.items():
-            pls = []
             value = "".join(value) if isinstance(value, (list, )) else value
-            tpl = "{0}-->''''''\"\"\"\"\"\">>>>>>;;;;;;</ScRiPt>{1}//"
-            poc[name] = tpl.format(value, xss_key)
-            playloads.append((name, poc))
+
+            for cmd in cmds:
+                cmd_type = cmd['type']
+                pattern = cmd['pattern']
+                pls = cmd['playloads']
+                for pl in pls:
+                    poc = copy.deepcopy(params)
+                    poc[name] = '{0}{1}'.format(value, pl);
+                    playloads.append((name, poc, pattern))
         return playloads
+
+    def __get_cmds(self):
+        cmds = []
+        cmds.append({
+            'type' : 'linux',
+            'pattern' : r'id',
+            'playloads' : [';id;', "';id;'", '";id;"'],
+        })
+        cmds.append({
+            'type' : 'php',
+            'pattern' : r'468c7e1fa14fb25592490062c0153f4d',
+            'playloads' : [
+                "${print(md5('imsilence))}",
+                "';${print(md5('imsilence))};'",
+                "\"]=1;${print(md5('imsilence))};//",
+            ],
+        })
+        return cmds

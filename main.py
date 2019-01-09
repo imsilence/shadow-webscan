@@ -5,7 +5,7 @@ import urllib3
 
 from crawler import Crawler, DNS, Request
 from fingerprint import Finger
-from scanner import SQL, XSS
+from scanner import SQL, XSS, CMD
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +30,7 @@ if __name__ == '__main__':
     scanners = [
         SQL(),
         XSS(),
+        CMD(),
     ]
 
     print('url count:', len(crawler.urls))
