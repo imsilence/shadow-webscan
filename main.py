@@ -5,7 +5,7 @@ import urllib3
 
 from crawler import Crawler, DNS, Request
 from fingerprint import Finger
-from scanner import SQL
+from scanner import SQL, XSS
 
 logger = logging.getLogger(__name__)
 
@@ -25,11 +25,20 @@ if __name__ == '__main__':
     crawler.crawl(url)
 
     print('-' * 20)
-    f = open('urls.txt', 'wt', encoding='utf-8')
-    sql = SQL()
 
+
+    scanners = [
+        SQL(),
+        XSS(),
+    ]
+
+    print('url count:', len(crawler.urls))
+    f = open('urls.txt', 'wt', encoding='utf-8')
     for url in crawler.urls:
-        print(sql.check(Request(url)))
+        print(url.raw_url)
+        for scanner in scanners:
+            print(scanner.check(Request(url)))
+
         f.write(url.raw_url)
         f.write('\n')
 

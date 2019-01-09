@@ -24,8 +24,12 @@ class SQL(CommonVulnerability):
 
     def __init__(self):
         self.__distance = 3
+        self.__white_params = []
 
     def check(self, request):
+        distance = self.__distance
+        white_params = self.__white_params
+
         curl = Curl()
 
         key = ''
@@ -43,6 +47,8 @@ class SQL(CommonVulnerability):
         playloads = self.__get_playloads(params)
         rt_list = []
         for name, poc_true, poc_false in playloads:
+            if name in white_params:
+                continue
             response = callback(request.url, **{key : params})
             response_true = callback(request.url, **{key : poc_true})
             response_false = callback(request.url, **{key : poc_false})
@@ -51,7 +57,7 @@ class SQL(CommonVulnerability):
                 continue
 
             if Simhash(response_true.body).\
-                distance(Simhash(response_false.body)) < self.__distance:
+                distance(Simhash(response_false.body)) < distance:
                 continue
 
             if Simhash(response.body).\
