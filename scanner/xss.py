@@ -51,7 +51,6 @@ class XSS(CommonVulnerability):
                 continue
             response = callback(request.url, **{key : params})
 
-            print(response.body)
             if not response.body or response.body.find(xss_key) == -1:
                 continue
 
