@@ -65,7 +65,7 @@ class XSS(CommonVulnerability):
         xss_key = self.__xss_key
         playloads = []
         for name, value in params.items():
-            pls = []
+            poc = copy.deepcopy(params)
             value = "".join(value) if isinstance(value, (list, )) else value
             tpl = "{0}-->''''''\"\"\"\"\"\">>>>>>;;;;;;</ScRiPt>{1}//"
             poc[name] = tpl.format(value, xss_key)
