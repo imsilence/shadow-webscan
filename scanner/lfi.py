@@ -17,20 +17,17 @@ from .serverity import Serverity
 logger = logging.getLogger(__name__)
 
 
-@register('xss')
-class XSS(CommonVulnerability):
+class LFI(CommonVulnerability):
 
-    NAME = '跨站脚本攻击'
-    RANK = Serverity.MEDIUM
+    NAME = '本地文件包含'
+    RANK = Serverity.HIGH
 
     NIL = lambda *args, **kwargs: None
 
     def __init__(self):
-        self.__xss_key = '<A>XSS_FLAG</A>'
         self.__white_params = []
 
     def check(self, request):
-        xss_key = self.__xss_key
         white_params = self.__white_params
 
         curl = Curl()
@@ -54,7 +51,7 @@ class XSS(CommonVulnerability):
                 continue
             response = callback(request.url, **{key : params})
 
-            if not response.body or response.body.find(xss_key) == -1:
+            if not response.body or re.search(pattern, response.body, re.I) is None:
                 continue
 
             vul = Vulnerability(self.NAME, self.RANK, request.url.url,
@@ -65,7 +62,6 @@ class XSS(CommonVulnerability):
         return rt_list
 
     def __get_playloads(self, params):
-        xss_key = self.__xss_key
         playloads = []
         for name, value in params.items():
             poc = copy.deepcopy(params)

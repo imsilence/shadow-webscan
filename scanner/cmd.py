@@ -9,6 +9,7 @@ from simhash import Simhash
 
 from crawler import Curl
 
+from . import register
 from .base import CommonVulnerability
 from .vul import Vulnerability
 from .serverity import Serverity
@@ -16,6 +17,7 @@ from .serverity import Serverity
 
 logger = logging.getLogger(__name__)
 
+@register('cmd')
 class CMD(CommonVulnerability):
 
     NAME = '命令注入'
@@ -52,7 +54,7 @@ class CMD(CommonVulnerability):
                 continue
             response = callback(request.url, **{key : params})
 
-            if not response.body or re.search(pattern, response.body) is None:
+            if not response.body or re.search(pattern, response.body, re.I) is None:
                 continue
 
             vul = Vulnerability(self.NAME, self.RANK, request.url.url,

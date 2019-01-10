@@ -8,6 +8,7 @@ from simhash import Simhash
 
 from crawler import Curl
 
+from . import register
 from .base import CommonVulnerability
 from .vul import Vulnerability
 from .serverity import Serverity
@@ -15,6 +16,7 @@ from .serverity import Serverity
 
 logger = logging.getLogger(__name__)
 
+@register('sql')
 class SQL(CommonVulnerability):
 
     NAME = 'SQL注入'
