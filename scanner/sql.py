@@ -51,9 +51,18 @@ class SQL(CommonVulnerability):
         for name, poc_true, poc_false in playloads:
             if name in white_params:
                 continue
+
             response = callback(request.url, **{key : params})
+            logger.debug('check result: %s, %s, %s, %s',
+                            request.url, key, params, response)
+
             response_true = callback(request.url, **{key : poc_true})
+            logger.debug('check result: %s, %s, %s, %s',
+                            request.url, key, poc_true, response_true)
+
             response_false = callback(request.url, **{key : poc_false})
+            logger.debug('check result: %s, %s, %s, %s',
+                            request.url, key, poc_false, response_false)
 
             if response_true.body == response_false.body:
                 continue

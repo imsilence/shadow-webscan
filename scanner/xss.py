@@ -52,7 +52,10 @@ class XSS(CommonVulnerability):
         for name, poc in playloads:
             if name in white_params:
                 continue
-            response = callback(request.url, **{key : params})
+
+            response = callback(request.url, **{key : poc})
+            logger.debug('check result: %s, %s, %s, %s',
+                            request.url, key, poc, response)
 
             if not response.body or response.body.find(xss_key) == -1:
                 continue

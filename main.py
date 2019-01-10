@@ -10,7 +10,7 @@ from scanner import Scanner
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
 
     urllib3.disable_warnings()
     DNS.open_cache()
