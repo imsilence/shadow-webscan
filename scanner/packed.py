@@ -33,7 +33,7 @@ class Packed(CommonVulnerability):
             '.7z'
         ]
         self.__content_types = [
-            'application/zip',
+            'application/zip', 'application/x-zip-compressed',
             'application/x-rar-compressed',
             'application/x-gtar',
             'application/x-bzip2',
@@ -60,7 +60,7 @@ class Packed(CommonVulnerability):
 
             content_type = response.headers.get('content-type', '').lower()
             if content_type in content_types:
-                vul = Vulnerability(self.NAME, self.RANK, file_url, 'HEAD')
+                vul = Vulnerability(self.NAME, self.RANK, url, 'HEAD')
                 logger.info(vul)
                 rt_list.append(vul)
 

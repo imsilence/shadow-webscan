@@ -66,7 +66,7 @@ class Bak(CommonVulnerability):
             else:
                 bak_url = '{0}{1}'.format(url, ext)
 
-                response = curl.get(url)
+                response = curl.get(bak_url)
                 logger.debug('check result: %s, %s', bak_url, response)
 
                 if response.is_ok and not Page404().is_404(response) \
