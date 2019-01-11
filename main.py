@@ -23,8 +23,7 @@ if __name__ == '__main__':
     url = 'https://www.baidu.com'
     url = 'http://127.0.0.1:8000/'
     finger = Finger()
-    print(finger.scan(url))
-
+    print('finger:', finger.scan(url))
 
     crawler = Crawler()
     crawler.crawl(url)
@@ -40,10 +39,10 @@ if __name__ == '__main__':
         f.write(url.raw_url)
         f.write('\n')
 
-
+    manager = Manager()
     print('request count:', len(crawler.requests))
     for request in crawler.requests:
-        for vul in Manager.check(request):
+        for vul in manager.check(request):
             print(vul)
 
-    Manager.clear()
+    manager.clear()
