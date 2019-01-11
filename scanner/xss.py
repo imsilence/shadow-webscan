@@ -4,8 +4,6 @@ import logging
 import random
 import copy
 
-from simhash import Simhash
-
 from crawler import Curl
 
 from . import register

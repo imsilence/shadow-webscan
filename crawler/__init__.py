@@ -6,3 +6,4 @@ from .curl import Curl
 from .crawler import Crawler
 from .request import Request
 from .response import Response
+from .page_404 import Page404

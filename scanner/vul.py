@@ -2,7 +2,7 @@
 
 class Vulnerability(object):
 
-    def __init__(self, name, rank, url, method, key, playload):
+    def __init__(self, name, rank, url, method, key=None, playload=None):
         self.__name = name
         self.__rank = rank
         self.__url = url

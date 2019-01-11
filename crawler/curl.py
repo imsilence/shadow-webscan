@@ -36,6 +36,9 @@ class Curl(object):
     def post(self, url, data=None, headers=None, **kwargs):
         return self.__send(url, 'POST', data=data, headers=headers, **kwargs)
 
+    def head(self, url, params=None, headers=None, **kwargs):
+        return self.__send(url, 'HEAD', params=params, headers=headers, **kwargs)
+
     def request(self, request, **kwargs):
         return self.__send(request.url, request.method, params=request.params,
                     data=request.data, headers=request.headers, **kwargs)

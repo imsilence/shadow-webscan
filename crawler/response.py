@@ -22,6 +22,10 @@ class Response(object):
         return self.__status_code
 
     @property
+    def is_ok(self):
+        return self.status_code >= 200 and self.status_code < 300
+
+    @property
     def status_msg(self):
         return self.__status_msg
 
@@ -51,4 +55,6 @@ class Response(object):
         return self.headers.get('set-cookie', None)
 
     def __repr__(self):
-        return '<{0!r}>{1!r}'.format(self.__class__.__name__, vars(self))
+        attrs = vars(self)
+        # attrs['_Response__body'] = attrs['_Response__body'][:20]
+        return '<{0!r}>{1!r}'.format(self.__class__.__name__, attrs)

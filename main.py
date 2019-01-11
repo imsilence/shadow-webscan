@@ -10,13 +10,14 @@ from scanner import Scanner
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     urllib3.disable_warnings()
     DNS.open_cache()
 
     url = 'http://testphp.vulnweb.com/index.php'
     url = 'https://www.baidu.com'
+    url = 'http://127.0.0.1:8000/'
     finger = Finger()
     print(finger.scan(url))
 
@@ -29,6 +30,8 @@ if __name__ == '__main__':
 
     print('url count:', len(crawler.urls))
     f = open('urls.txt', 'wt', encoding='utf-8')
+
+    print(Scanner.check_packed(url))
     for url in crawler.urls:
         print(url.raw_url)
         for vul in Scanner.check(url):

@@ -5,8 +5,6 @@ import random
 import copy
 import re
 
-from simhash import Simhash
-
 from crawler import Curl
 
 from . import register

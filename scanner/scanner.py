@@ -4,6 +4,8 @@ import logging
 
 from crawler import Request
 
+from .packed import Packed
+
 logger = logging.getLogger(__name__)
 
 class Scanner(object):
@@ -18,6 +20,10 @@ class Scanner(object):
             check = getattr(plugin(), 'check', cls.NIL)
             yield from check(Request(url))
 
+    @classmethod
+    def check_packed(cls, url):
+        check = getattr(Packed(), 'check', cls.NIL)
+        return check(Request(url))
 
 
 def register(name):
