@@ -31,7 +31,6 @@ if __name__ == '__main__':
     print('url count:', len(crawler.urls))
     f = open('urls.txt', 'wt', encoding='utf-8')
 
-    print(Scanner.check_packed(url))
     for url in crawler.urls:
         print(url.raw_url)
         for vul in Scanner.check(url):
