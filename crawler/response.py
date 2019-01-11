@@ -6,7 +6,7 @@ class Response(object):
 
     DEFAULT_STATUS_MSG = 'OK'
 
-    def __init__(self, status_code=None, status_msg=DEFAULT_STATUS_MSG,
+    def __init__(self, status_code=404, status_msg=DEFAULT_STATUS_MSG,
         headers=None, body='', request_url=None, uid=None, charset=None):
 
         self.__status_code = status_code
