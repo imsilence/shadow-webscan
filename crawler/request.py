@@ -67,7 +67,7 @@ class Request(object):
 
     @property
     def data(self):
-        return self.__data
+        return {} if self.__data is None else dict(self.__data)
 
     def __repr__(self):
         return '<{0}>{1}'.format(self.__class__.__name__, vars(self))
@@ -79,6 +79,9 @@ class Request(object):
 
     def __hash__(self):
         data = self.__data
-        if isinstance(data, list):
-            data = tuple(sorted(name for name, value in data))
+        if isinstance(data, dict):
+            data = tuple(sorted(data.keys()))
+        elif isinstance(data, list):
+            data = tuple(sorted(key for key, value in data))
+
         return hash(self.__url) ^ hash(self.__query_string) ^ hash(data)

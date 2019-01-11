@@ -61,6 +61,7 @@ class HTMLParser(object):
             url = self.__make_url(value)
             if url:
                 self.__urls_header.add(url)
+                self.__requests.append(Request(url))
 
     def __regex_parse(self):
         for regex in self.URL_RES:
@@ -70,6 +71,7 @@ class HTMLParser(object):
                 url = self.__make_url(url)
                 if url:
                     self.__urls_re.add(url)
+                    self.__requests.append(Request(url))
 
     def __xml_parse(self):
         parser = etree.HTMLParser(target=self)
@@ -104,6 +106,7 @@ class HTMLParser(object):
                 url = self.__make_url(value)
                 if url:
                     self.__urls_tag.add(url)
+                    self.__requests.append(Request(url))
 
     def __make_url(self, url):
         if not url or url.startswith('javascript:'):

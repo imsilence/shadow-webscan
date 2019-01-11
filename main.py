@@ -5,12 +5,16 @@ import urllib3
 
 from crawler import Crawler, DNS, Request
 from fingerprint import Finger
-from scanner import Scanner
+from vulnerability import Manager
 
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    stream = open('logs/main.log', 'w', encoding="utf-8")
+    logging.basicConfig(
+        level=logging.DEBUG,
+        stream=stream
+    )
 
     urllib3.disable_warnings()
     DNS.open_cache()
@@ -29,14 +33,17 @@ if __name__ == '__main__':
 
 
     print('url count:', len(crawler.urls))
-    f = open('urls.txt', 'wt', encoding='utf-8')
+    f = open('logs/urls.txt', 'wt', encoding='utf-8')
 
     for url in crawler.urls:
         print(url.raw_url)
-        for vul in Scanner.check(url):
-            print(vul)
-
         f.write(url.raw_url)
         f.write('\n')
 
 
+    print('request count:', len(crawler.requests))
+    for request in crawler.requests:
+        for vul in Manager.check(request):
+            print(vul)
+
+    Manager.clear()
